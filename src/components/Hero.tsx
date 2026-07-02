@@ -1,6 +1,23 @@
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+
+const HERO_IMAGE = 'https://roamingflavours.com/images/ai-1.jpg'
 
 export default function Hero() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+
+  // Background stays nearly fixed — subtle drift + slow zoom.
+  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '8%'])
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.08])
+
+  // Text scrolls up and fades away faster than the background.
+  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '-45%'])
+  const textOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
+
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -8,81 +25,73 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-secondary"
+      ref={sectionRef}
+      className="relative h-screen min-h-[600px] flex items-center justify-center text-center overflow-hidden bg-secondary"
     >
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-secondary via-secondary to-primary/30" />
+      <motion.div
+        style={{
+          y: bgY,
+          scale: bgScale,
+          backgroundImage: `url('${HERO_IMAGE}')`,
+          filter: 'brightness(0.28) saturate(0.7)',
+        }}
+        className="absolute -inset-[20%] bg-cover bg-center will-change-transform"
+      />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_35%,transparent,rgba(28,28,28,0.82))]" />
+      <div className="absolute bottom-0 left-0 right-0 h-60 bg-gradient-to-b from-transparent to-secondary" />
 
-      {/* Decorative circles */}
-      <div className="absolute top-1/4 right-10 w-72 h-72 rounded-full bg-accent/5 blur-3xl" />
-      <div className="absolute bottom-1/4 left-10 w-96 h-96 rounded-full bg-primary/10 blur-3xl" />
-
-      <div className="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto">
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-accent font-semibold text-sm uppercase tracking-widest mb-6"
-        >
-          Windsor's Favourite Food Truck
-        </motion.p>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="font-display text-6xl sm:text-7xl lg:text-8xl font-bold text-white leading-none mb-6"
-        >
-          Roaming
-          <br />
-          <span className="text-accent">Flavours</span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-gray-300 text-xl sm:text-2xl mb-10 max-w-2xl mx-auto leading-relaxed"
-        >
-          Hand-crafted burgers, crispy chicken, and bold street bites — parked at Windsor Chrysler, Plant Gate-2.
-        </motion.p>
+      <motion.div
+        style={{ y: textY, opacity: textOpacity }}
+        className="relative z-10 w-full max-w-[600px] px-6 pt-20"
+      >
+        <h1 className="font-display font-extrabold leading-[0.9] mb-7">
+          <motion.span
+            initial={{ opacity: 0, y: 44 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.3 }}
+            className="block text-[clamp(58px,16vw,108px)] text-white"
+          >
+            Roaming
+          </motion.span>
+          <motion.span
+            initial={{ opacity: 0, y: 44 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.52 }}
+            className="block text-[clamp(58px,16vw,108px)] text-accent italic"
+          >
+            Flavours
+          </motion.span>
+        </h1>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.55 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          transition={{ duration: 0.7, delay: 0.95 }}
+          className="flex flex-col gap-3 max-w-[260px] mx-auto"
         >
           <button
-            onClick={() => scrollTo('menu')}
-            className="w-full sm:w-auto bg-primary hover:bg-red-700 text-white px-8 py-4 rounded-full font-bold text-base transition-colors shadow-xl shadow-primary/30"
-          >
-            View Menu
-          </button>
-          <button
             onClick={() => scrollTo('location')}
-            className="w-full sm:w-auto border border-white/30 hover:border-accent hover:text-accent text-white px-8 py-4 rounded-full font-bold text-base transition-colors"
+            className="block rounded-full border-[1.5px] border-white/20 text-white px-7 py-4 text-sm font-bold hover:border-accent hover:text-accent transition-colors"
           >
             Find Us 📍
           </button>
         </motion.div>
+      </motion.div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
-        >
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1.3 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+      >
+        <div className="w-6 h-10 rounded-full border-2 border-white/[0.18] flex items-start justify-center pt-1.5">
           <motion.div
             animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center pt-2"
-          >
-            <div className="w-1.5 h-1.5 rounded-full bg-white/60" />
-          </motion.div>
-        </motion.div>
-      </div>
+            transition={{ duration: 1.6, delay: 1.5, repeat: Infinity }}
+            className="w-[5px] h-[5px] rounded-full bg-white/40"
+          />
+        </div>
+      </motion.div>
     </section>
   )
 }

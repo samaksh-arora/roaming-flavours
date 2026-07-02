@@ -23,56 +23,59 @@ const contactItems = [
 
 export default function Contact() {
   return (
-    <section id="contact" className="bg-secondary text-white section-padding">
-      <div className="max-w-6xl mx-auto">
+    <section id="contact" className="bg-surface py-24 px-6">
+      <div className="max-w-[900px] mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-14"
+          transition={{ duration: 0.7 }}
+          className="text-center mb-9"
         >
-          <h2 className="font-display text-4xl sm:text-5xl font-bold mb-4">Get In Touch</h2>
-          <p className="text-gray-400 text-lg max-w-xl mx-auto">
-            Have a question or want to book us for an event? We'd love to hear from you.
-          </p>
+          <h2 className="font-display text-[clamp(34px,7vw,52px)] text-secondary font-extrabold mb-3">
+            Get In Touch
+          </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-14">
+        <div className="grid gap-4 mb-9 [grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))]">
           {contactItems.map((item, i) => (
             <motion.div
               key={item.label}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="flex flex-col items-center text-center gap-3 p-6 rounded-2xl bg-white/5"
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              whileHover={{ y: -4, boxShadow: '0 12px 36px rgba(0,0,0,0.08)' }}
+              className="bg-white rounded-[20px] px-5 py-7 text-center border border-black/[0.05]"
             >
-              <span className="text-4xl">{item.icon}</span>
-              <p className="text-gray-400 text-sm uppercase tracking-widest">{item.label}</p>
+              <div className="text-3xl mb-3.5">{item.icon}</div>
+              <p className="text-[10px] text-[#ccc] tracking-[0.15em] uppercase mb-2.5">{item.label}</p>
               {item.href ? (
-                <a href={item.href} className="text-white hover:text-accent transition-colors font-medium break-all">
+                <a
+                  href={item.href}
+                  className="text-secondary hover:text-primary transition-colors font-semibold text-[15px] break-all"
+                >
                   {item.value}
                 </a>
               ) : (
-                <p className="text-white font-medium">{item.value}</p>
+                <p className="text-secondary font-semibold text-[15px]">{item.value}</p>
               )}
             </motion.div>
           ))}
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex justify-center gap-6"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="flex justify-center gap-3 flex-wrap"
         >
           <a
             href="https://www.facebook.com/profile.php?id=61557085898919"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-6 py-3 rounded-full border border-white/20 hover:border-accent hover:text-accent transition-colors text-sm font-medium"
+            className="px-7 py-[13px] rounded-full border-[1.5px] border-secondary/[0.12] text-secondary hover:border-primary hover:text-primary text-sm font-semibold transition-colors"
           >
             Facebook
           </a>
@@ -80,7 +83,7 @@ export default function Contact() {
             href="https://www.instagram.com/roamingflavourswindsor"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-6 py-3 rounded-full border border-white/20 hover:border-accent hover:text-accent transition-colors text-sm font-medium"
+            className="px-7 py-[13px] rounded-full border-[1.5px] border-secondary/[0.12] text-secondary hover:border-primary hover:text-primary text-sm font-semibold transition-colors"
           >
             Instagram
           </a>

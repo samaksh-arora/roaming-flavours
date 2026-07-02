@@ -10,6 +10,7 @@ export default {
         accent: '#F39C12',
         surface: '#FAFAF8',
         ink: '#2C2C2C',
+        near: '#111111',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

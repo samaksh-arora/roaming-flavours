@@ -1,91 +1,85 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { menuCategories } from '../data/menu'
+import FallbackImage from './FallbackImage'
 
 export default function Menu() {
   const [activeId, setActiveId] = useState(menuCategories[0].id)
   const activeCategory = menuCategories.find((c) => c.id === activeId)!
 
   return (
-    <section id="menu" className="bg-white section-padding">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="font-display text-4xl sm:text-5xl font-bold text-secondary mb-4">Our Menu</h2>
-          <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            Made fresh to order. Simple ingredients, big flavours.
-          </p>
-        </motion.div>
+    <section id="menu" className="bg-surface pb-20">
+      <motion.div
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+        className="text-center pt-20 px-6"
+      >
+        <h2 className="font-display text-[clamp(34px,7vw,52px)] text-secondary font-extrabold mb-3">Our Menu</h2>
+      </motion.div>
 
-        {/* Category tabs */}
-        <div className="flex justify-center gap-3 mb-10 flex-wrap">
+      <div className="sticky top-[54px] z-50 bg-surface px-6 pt-7 pb-[18px] mt-9 border-b border-black/[0.05]">
+        <div className="flex gap-2.5 justify-center">
           {menuCategories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveId(cat.id)}
-              className={`px-6 py-2.5 rounded-full font-semibold text-sm transition-all ${
-                activeId === cat.id
-                  ? 'bg-primary text-white shadow-lg'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              className={`px-7 py-[11px] rounded-full text-[13px] font-semibold transition-all ${
+                activeId === cat.id ? 'bg-primary text-white' : 'bg-[#EBEBEB] text-[#666]'
               }`}
             >
               {cat.label}
             </button>
           ))}
         </div>
+      </div>
 
-        {/* Items grid */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeId}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-5"
-          >
-            {activeCategory.items.map((item, i) => (
-              <motion.div
-                key={item.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: i * 0.07 }}
-                className="flex gap-4 p-5 rounded-2xl border border-gray-100 bg-surface hover:border-accent/40 hover:shadow-md transition-all"
-              >
-                <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center shrink-0 text-lg">
-                  🍽️
-                </div>
-                <div>
-                  <h3 className="font-semibold text-secondary text-base">{item.name}</h3>
-                  <p className="text-gray-500 text-sm mt-0.5">{item.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </AnimatePresence>
-
-        {/* PDF menu link */}
+      <AnimatePresence mode="wait">
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-center mt-12"
+          key={activeId}
+          initial="hidden"
+          animate="show"
+          exit="hidden"
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.085 } } }}
+          className="grid gap-4 p-6 max-w-[960px] mx-auto [grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]"
         >
-          <a
-            href="https://roamingflavours.com/menu.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-primary hover:text-red-700 font-semibold text-sm underline underline-offset-4 transition-colors"
-          >
-            View Full Menu (PDF) →
-          </a>
+          {activeCategory.items.map((item) => (
+            <motion.div
+              key={item.name}
+              variants={{
+                hidden: { opacity: 0, y: 22 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.45 } },
+              }}
+              whileHover={{ y: -4, boxShadow: '0 12px 36px rgba(0,0,0,0.09)' }}
+              className="bg-white rounded-[20px] overflow-hidden border border-black/[0.05]"
+            >
+              <div className="h-[180px] overflow-hidden bg-[#EDE8DE] flex items-center justify-center">
+                <FallbackImage
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full h-full object-cover"
+                  fallback={<span className="text-[56px] flex items-center justify-center w-full h-full">{item.fallbackEmoji}</span>}
+                />
+              </div>
+              <div className="px-5 pt-5 pb-[22px]">
+                <h3 className="font-display text-xl font-bold text-secondary mb-2">{item.name}</h3>
+                <p className="text-[#aaa] text-sm leading-[1.6]">{item.description}</p>
+              </div>
+            </motion.div>
+          ))}
         </motion.div>
+      </AnimatePresence>
+
+      <div className="text-center px-6 mt-4">
+        <a
+          href="https://roamingflavours.com/menu.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary text-sm font-semibold border-b-[1.5px] border-primary/30 hover:border-primary pb-0.5 transition-colors"
+        >
+          View Full Menu PDF →
+        </a>
       </div>
     </section>
   )

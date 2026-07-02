@@ -8,7 +8,7 @@
   }
 
   body {
-    @apply bg-surface text-ink font-sans antialiased;
+    @apply bg-near text-ink font-sans antialiased overflow-x-hidden;
   }
 }
 
@@ -16,4 +16,19 @@
   .section-padding {
     @apply px-4 sm:px-6 lg:px-16 py-20;
   }
+}
+
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-ticker {
+  animation-name: ticker;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
